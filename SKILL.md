@@ -1,10 +1,19 @@
+---
+name: bpmn-modeling-light
+description: >
+  Dieser Skill erzeugt und modifiziert BPMN-Prozessmodelle im Markdown-Tabellenformat
+  gemäß dem BPMN Database Schema v3.0. Er wird ausschließlich verwendet wenn der Nutzer
+  explizit ein BPMN-Modell erstellen, erweitern oder modifizieren möchte. Trigger-Begriffe
+  sind BPMN, Start Event, Sequence Flow, Gateway, User Task und andere BPMN-Fachbegriffe.
+  Nicht triggern bei allgemeinen Prozessbeschreibungen ohne BPMN-Bezug, bei anderen
+  Modelltypen (z.B. Datenmodell) oder bei allgemeinen BPMN-Fragen ohne Modellierungsauftrag.
+metadata:
+  version: "2.0"
+---
+
 # BPMN Modeling Light — Skill
 
-## Skill-Beschreibung (für Claude Code)
-
-Skill-Name: `bpmn-modeling`
-
-Trigger: Verwende diesen Skill **ausschließlich** wenn der Nutzer explizit ein **BPMN-Modell** erstellen, erweitern oder modifizieren möchte. Das Wort "BPMN" (oder eindeutige BPMN-Fachbegriffe wie "Start Event", "Sequence Flow", "Gateway", "User Task") muss im Auftrag vorkommen.
+## Trigger-Beispiele
 
 Beispiele die triggern:
 - "Erstelle ein BPMN-Modell für einen Bestellprozess"
@@ -18,12 +27,6 @@ Beispiele die triggern:
 - "Erstelle ein Datenmodell" (anderer Modelltyp)
 - Allgemeine Prozessbeschreibungen ohne BPMN-Kontext
 - Allgemeine BPMN-Fragen ohne Modellierungsauftrag
-
----
-
-## Zweck
-
-Dieser Skill erzeugt und modifiziert BPMN-Prozessmodelle im Markdown-Tabellenformat gemäß dem BPMN Database Schema v3.0. Die Ausgabe ist ein vollständiges, konsistentes Set von Markdown-Tabellen, das alle BPMN-Elemente des modellierten Prozesses enthält.
 
 ---
 
