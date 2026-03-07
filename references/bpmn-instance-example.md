@@ -1,9 +1,9 @@
-# BPMN Integer Schema - Corrected Minimal Example
+# BPMN Instance Example — Invoice Process
 
 ## bpmn_model
 | bpmn_model_id | name | version | author | creation_date | modification_date | documentation |
 |---------------|------|---------|--------|---------------|-------------------|---------------|
-| 20251026_1730_56_001 | Simple Invoice Model | 1.0 | AI System | 2025-05-24T10:00:00Z | 2025-05-24T10:00:00Z | Demonstration model for invoice handling showing all BPMN element types |
+| 20251026_1730_56_001 | Simple Invoice Model | 1.0 | AI System | 2025-05-24T10:00:00Z | 2025-05-24T10:00:00Z | Invoice handling with validation, amount-based routing, and error handling |
 
 ## bpmn_process
 | bpmn_process_id | bpmn_model_id | name | is_executable | documentation |
@@ -50,31 +50,12 @@
 | 035 | Note Association | Links annotation to gateway | association |
 | 036 | Status Update | Message flow for status | message_flow |
 | 037 | Timeout Timer | Timer for process timeout | event |
-| 038 | Completion Signal | Signal when process completes | event |
-| 039 | Standard Loop Task | Task with standard loop | user_task |
-| 040 | MI Sequential Task | Task with sequential multi-instance loop | script_task |
-| 041 | MI Parallel Task | Task with parallel multi-instance loop | service_task |
-| 042 | Message Catch | Intermediate catch for message | event |
-| 043 | Conditional Catch | Intermediate catch for condition | event |
-| 044 | Escalation Catch | Intermediate catch for escalation | event |
-| 045 | Compensation Catch | Intermediate catch for compensation | event |
-| 046 | Link Catch | Intermediate catch for link | event |
-| 047 | Terminate End | Process terminates immediately | event |
-| 048 | Inclusive Split | Inclusive gateway | gateway |
-| 049 | Parallel Split | Parallel gateway | gateway |
-| 050 | Event-Based GW | Event-based gateway | gateway |
-| 051 | Complex GW | Complex gateway | gateway |
 
 ## message_definition
 | message_definition_id | name | item_id |
 |----------------------|------|---------|
 | 001 | Invoice Received | item_1 |
 | 002 | Status Update Message | item_2 |
-
-## signal_definition
-| signal_definition_id | name | signal_type |
-|---------------------|------|-------------|
-| 001 | Process Completed | public |
 
 ## error_definition
 | error_definition_id | name | error_code | structure_id |
@@ -121,20 +102,6 @@
 | 035 | 001 | 035 |
 | 036 | 001 | 036 |
 | 037 | 001 | 037 |
-| 038 | 001 | 038 |
-| 039 | 001 | 039 |
-| 040 | 001 | 040 |
-| 041 | 001 | 041 |
-| 042 | 001 | 042 |
-| 043 | 001 | 043 |
-| 044 | 001 | 044 |
-| 045 | 001 | 045 |
-| 046 | 001 | 046 |
-| 047 | 001 | 047 |
-| 048 | 001 | 048 |
-| 049 | 001 | 049 |
-| 050 | 001 | 050 |
-| 051 | 001 | 051 |
 
 ## activity
 | activity_id | bpmn_element_id | activity_type | is_multi_instance | loop_type | is_ad_hoc | is_compensation | start_quantity | completion_quantity |
@@ -145,9 +112,6 @@
 | 004 | 007 | task | false | none | false | false | 1 | 1 |
 | 005 | 008 | task | false | none | false | false | 1 | 1 |
 | 006 | 009 | call_activity | false | none | false | false | 1 | 1 |
-| 007 | 039 | task | false | standard | false | false | 1 | 1 |
-| 008 | 040 | task | true | multi_instance_sequential | false | false | 1 | 1 |
-| 009 | 041 | task | true | multi_instance_parallel | false | false | 1 | 1 |
 
 ## task
 | task_id | activity_id | task_type | implementation |
@@ -156,27 +120,21 @@
 | 002 | 003 | service | webservice |
 | 003 | 004 | script | ##unspecified |
 | 004 | 005 | business_rule | ##unspecified |
-| 005 | 007 | user | ##unspecified |
-| 006 | 008 | script | ##unspecified |
-| 007 | 009 | service | ##unspecified |
 
 ## service_task
 | service_task_id | task_id | operation_id | implementation_id |
 |-----------------|---------|--------------|-------------------|
 | 001 | 002 | operation_1 | com.example.InvoiceService |
-| 002 | 007 | operation_2 | com.example.LoopService |
 
 ## user_task
 | user_task_id | task_id | implementation | assignment_expression |
 |--------------|---------|----------------|----------------------|
 | 001 | 001 | webform | ${role == 'finance-clerk'} |
-| 002 | 005 | webform | ${role == 'manager'} |
 
 ## script_task
 | script_task_id | task_id | script | script_format |
 |----------------|---------|--------|---------------|
 | 001 | 003 | total = amount * (1 + taxRate); return total; | javascript |
-| 002 | 006 | for item in items: process(item) | python |
 
 ## business_rule_task
 | business_rule_task_id | task_id | implementation | rule_names |
@@ -201,19 +159,11 @@
 | 003 | 011 | end | none | ##!empty!## |
 | 004 | 012 | end | error | ##!empty!## |
 | 005 | 037 | boundary | timer | true |
-| 006 | 038 | intermediate_throw | signal | ##!empty!## |
-| 007 | 042 | intermediate_catch | message | ##!empty!## |
-| 008 | 043 | intermediate_catch | conditional | ##!empty!## |
-| 009 | 044 | intermediate_catch | escalation | ##!empty!## |
-| 010 | 045 | intermediate_catch | compensation | ##!empty!## |
-| 011 | 046 | intermediate_catch | link | ##!empty!## |
-| 012 | 047 | end | terminate | ##!empty!## |
 
 ## message_event_definition
 | message_event_definition_id | event_id | message_definition_id | operation_id |
 |----------------------------|----------|----------------------|--------------|
 | 001 | 002 | 001 | ##!empty!## |
-| 002 | 007 | 001 | ##!empty!## |
 
 ## timer_event_definition
 | timer_event_definition_id | event_id | time_date | time_duration | time_cycle |
@@ -224,11 +174,6 @@
 | error_event_definition_id | event_id | error_definition_id |
 |--------------------------|----------|---------------------|
 | 001 | 004 | 001 |
-
-## signal_event_definition
-| signal_event_definition_id | event_id | signal_definition_id |
-|---------------------------|----------|---------------------|
-| 001 | 006 | 001 |
 
 ## sequence_flow
 | sequence_flow_id | bpmn_element_id | source_bpmn_element_id | target_bpmn_element_id | is_default | condition_expression |
@@ -251,10 +196,6 @@
 |------------|-----------------|--------------|-------------------|------------------|
 | 001 | 005 | exclusive | diverging | ##!empty!## |
 | 002 | 010 | exclusive | converging | ##!empty!## |
-| 003 | 048 | inclusive | diverging | ##!empty!## |
-| 004 | 049 | parallel | diverging | ##!empty!## |
-| 005 | 050 | event_based | diverging | ##!empty!## |
-| 006 | 051 | complex | diverging | ##!empty!## |
 
 ## message_flow
 | message_flow_id | bpmn_element_id | source_bpmn_element_id | target_bpmn_element_id | message_definition_id |

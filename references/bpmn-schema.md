@@ -32,14 +32,6 @@
 | modification_date | TIMESTAMP | Date of last modification | | |
 | documentation | TEXT | Model-level documentation | | |
 
-**Example Data**:
-```
-bpmn_model_id | name | version | author | creation_date | modification_date | documentation
-------------------------------------------------------------------------------------------------------------------------
-20251026_1730_56_001 | Invoice Management System | 1.0 | John Smith | 2025-01-15 10:30:00 | 2025-05-10 14:20:00 | Complete invoice management model with multiple processes
-20251026_1845_12_001 | Customer Journey | 2.3 | Sarah Jones | 2025-03-22 09:15:00 | 2025-04-30 11:45:00 | End-to-end customer experience model
-```
-
 ### Table: bpmn_process
 
 **Description**: Represents a BPMN process that belongs to a model and serves as a container for BPMN elements.
@@ -51,16 +43,6 @@ bpmn_model_id | name | version | author | creation_date | modification_date | do
 | name | VARCHAR(255) | Name of the process | NOT NULL | |
 | is_executable | BOOLEAN | Indicates whether the process is executable | | |
 | documentation | TEXT | Textual documentation of the process | | |
-
-**Example Data**:
-```
-bpmn_process_id | bpmn_model_id | name | is_executable | documentation
-------------------------------------------------------------------------------------------------------------------------
-0001 | 20251026_1730_56_001 | Invoice Processing | true | Process for handling invoice approval and payment
-0002 | 20251026_1730_56_001 | Invoice Validation | true | Subprocess for validating invoice data
-0003 | 20251026_1845_12_001 | Customer Onboarding | true | Process for registering new customers
-0004 | 20251026_1845_12_001 | Customer Verification | true | Process for verifying customer identity
-```
 
 ### Table: bpmn_element
 
@@ -77,15 +59,6 @@ bpmn_process_id | bpmn_model_id | name | is_executable | documentation
 
 **HINWEIS**: Die Werte "activity" und "task" sind KEINE gültigen element_type Werte. Verwende immer den spezifischsten Subtyp (z.B. "user_task" statt "task", "subprocess" statt "activity").
 
-**Example Data**:
-```
-bpmn_element_id | name | documentation | element_type
-------------------------------------------------------
-0001 | Approve Invoice | User approves the invoice | user_task
-0002 | Start Process | Process starts when new order arrives | event
-0003 | Invoice Amount Check | Decides processing path based on amount | gateway
-```
-
 ### Table: message_definition
 
 **Description**: Defines message types used in Message Events and Message Flows.
@@ -96,14 +69,6 @@ bpmn_element_id | name | documentation | element_type
 | name | VARCHAR(255) | Name of the message | NOT NULL | |
 | item_id | VARCHAR(50) | Reference to an Item Definition element | | |
 
-**Example Data**:
-```
-message_definition_id | name | item_id
----------------------------------------
-0001 | New Order Request | item_1
-0002 | Payment Confirmation | item_2
-```
-
 ### Table: signal_definition
 
 **Description**: Defines signal types used in Signal Events.
@@ -113,14 +78,6 @@ message_definition_id | name | item_id
 | signal_definition_id | INTEGER | Unique identifier for the signal | PK, AUTO_INCREMENT | |
 | name | VARCHAR(255) | Name of the signal | NOT NULL | |
 | signal_type | VARCHAR(50) | Type of the signal | | |
-
-**Example Data**:
-```
-signal_definition_id | name | signal_type
------------------------------------------
-0001 | Process Completed | public
-0002 | Timeout Warning | private
-```
 
 ### Table: error_definition
 
@@ -133,14 +90,6 @@ signal_definition_id | name | signal_type
 | error_code | VARCHAR(50) | Error code | | |
 | structure_id | VARCHAR(50) | Reference to a data structure | | |
 
-**Example Data**:
-```
-error_definition_id | name | error_code | structure_id
---------------------------------------------------------
-0001 | Invalid Invoice | ERR-001 | struct_1
-0002 | Payment Failed | ERR-002 | struct_2
-```
-
 ### Table: process_element
 
 **Description**: Junction table defining the membership of elements to processes.
@@ -150,15 +99,6 @@ error_definition_id | name | error_code | structure_id
 | process_element_id | INTEGER | Unique identifier | PK, AUTO_INCREMENT | |
 | bpmn_process_id | INTEGER | Reference to the process | FK | bpmn_process.bpmn_process_id |
 | bpmn_element_id | INTEGER | Reference to the element | FK | bpmn_element.bpmn_element_id |
-
-**Example Data**:
-```
-process_element_id | bpmn_process_id | bpmn_element_id
--------------------------------------------------------
-0001 | 0001 | 0001
-0002 | 0001 | 0002
-0003 | 0001 | 0003
-```
 
 ### Table: activity
 
@@ -179,14 +119,6 @@ process_element_id | bpmn_process_id | bpmn_element_id
 **Value Domain for activity_type**: ["task", "subprocess", "call_activity"]
 **Value Domain for loop_type**: ["standard", "multi_instance_sequential", "multi_instance_parallel", "none"]
 
-**Example Data**:
-```
-activity_id | bpmn_element_id | activity_type | is_multi_instance | loop_type | is_ad_hoc | is_compensation | start_quantity | completion_quantity
----------------------------------------------------------------------------------------------------------------------------------
-0001 | 0001 | task | false | none | false | false | 1 | 1
-0002 | 0004 | subprocess | false | none | false | false | 1 | 1
-```
-
 ### Table: task
 
 **Description**: Specialization of an activity that represents an atomic work step.
@@ -201,14 +133,6 @@ activity_id | bpmn_element_id | activity_type | is_multi_instance | loop_type | 
 **Value Domain for task_type**: ["user", "service", "send", "receive", "manual", "business_rule", "script"]
 **Value Domain for implementation**: ["webservice", "##unspecified", "other"]
 
-**Example Data**:
-```
-task_id | activity_id | task_type | implementation
---------------------------------------------------
-0001 | 0001 | user | ##unspecified
-0002 | 0003 | service | webservice
-```
-
 ### Table: service_task
 
 **Description**: A specialized task that represents a service or application.
@@ -220,13 +144,6 @@ task_id | activity_id | task_type | implementation
 | operation_id | VARCHAR(50) | Reference to an operation | | |
 | implementation_id | VARCHAR(255) | Reference to a specific implementation | | |
 
-**Example Data**:
-```
-service_task_id | task_id | operation_id | implementation_id
------------------------------------------------------
-0001 | 0002 | operation_1 | com.example.InvoiceService
-```
-
 ### Table: user_task
 
 **Description**: A specialized task performed by a human user.
@@ -237,13 +154,6 @@ service_task_id | task_id | operation_id | implementation_id
 | task_id | INTEGER | Reference to the task | FK, UNIQUE | task.task_id |
 | implementation | VARCHAR(100) | Implementation details for user interaction | | |
 | assignment_expression | TEXT | Expressions for assignment rules | | |
-
-**Example Data**:
-```
-user_task_id | task_id | implementation | assignment_expression
----------------------------------------------------------
-0001 | 0001 | webform | ${role == 'finance-manager'}
-```
 
 ### Table: script_task
 
@@ -258,13 +168,6 @@ user_task_id | task_id | implementation | assignment_expression
 
 **Value Domain for script_format**: ["javascript", "groovy", "python", "java", "other"]
 
-**Example Data**:
-```
-script_task_id | task_id | script | script_format
-------------------------------------------
-0001 | 0003 | console.log("Processing invoice"); | javascript
-```
-
 ### Table: business_rule_task
 
 **Description**: A specialized task that executes business rules.
@@ -275,13 +178,6 @@ script_task_id | task_id | script | script_format
 | task_id | INTEGER | Reference to the task | FK, UNIQUE | task.task_id |
 | implementation | VARCHAR(100) | Implementation details for rule execution | | |
 | rule_names | TEXT | Names of the rules to execute | | |
-
-**Example Data**:
-```
-business_rule_task_id | task_id | implementation | rule_names
-------------------------------------------------
-0001 | 0004 | dmn | discount_rules,shipping_rules
-```
 
 ### Table: subprocess
 
@@ -294,15 +190,6 @@ business_rule_task_id | task_id | implementation | rule_names
 | is_transaction | BOOLEAN | Indicates whether the subprocess is treated as a transaction | | |
 | triggered_by_event | BOOLEAN | Indicates whether the subprocess is triggered by an event | | |
 
-**Example Data**:
-```
-subprocess_id | activity_id | is_transaction | triggered_by_event
----------------------------------------------------
-0001 | 0002 | false | false
-0002 | 0004 | true | false
-0003 | 0005 | false | true
-```
-
 ### Table: call_activity
 
 **Description**: An activity that references and executes another process.
@@ -312,13 +199,6 @@ subprocess_id | activity_id | is_transaction | triggered_by_event
 | call_activity_id | INTEGER | Unique identifier | PK, AUTO_INCREMENT | |
 | activity_id | INTEGER | Reference to the activity | FK, UNIQUE | activity.activity_id |
 | bpmn_process_id_reference | INTEGER | Reference to the called process | FK | bpmn_process.bpmn_process_id |
-
-**Example Data**:
-```
-call_activity_id | activity_id | bpmn_process_id_reference
-----------------------------------
-0001 | 0006 | 0002
-```
 
 ### Table: event
 
@@ -335,16 +215,6 @@ call_activity_id | activity_id | bpmn_process_id_reference
 **Value Domain for event_type**: ["start", "end", "intermediate_catch", "intermediate_throw", "boundary"]
 **Value Domain for event_definition_type**: ["message", "timer", "error", "signal", "none", "conditional", "escalation", "compensation", "link", "terminate"]
 
-**Example Data**:
-```
-event_id | bpmn_element_id | event_type | event_definition_type | is_interrupting
-----------------------------------------------------------------
-0001 | 0002 | start | message | true
-0002 | 0005 | end | none | null
-0003 | 0006 | intermediate_catch | timer | null
-0004 | 0007 | boundary | error | true
-```
-
 ### Table: message_event_definition
 
 **Description**: Defines a message-based event.
@@ -354,14 +224,7 @@ event_id | bpmn_element_id | event_type | event_definition_type | is_interruptin
 | message_event_definition_id | INTEGER | Unique identifier | PK, AUTO_INCREMENT | |
 | event_id | INTEGER | Reference to the event | FK, UNIQUE | event.event_id |
 | message_definition_id | INTEGER | Reference to a message definition | FK | message_definition.message_definition_id |
-| operation_ref | VARCHAR(50) | Reference to an operation | | |
-
-**Example Data**:
-```
-message_event_definition_id | event_id | message_definition_id | operation_id
----------------------------------------------------------
-0001 | 0001 | 0001 | operation_1
-```
+| operation_id | VARCHAR(50) | Reference to an operation | | |
 
 ### Table: timer_event_definition
 
@@ -375,15 +238,6 @@ message_event_definition_id | event_id | message_definition_id | operation_id
 | time_duration | TEXT | A time duration (ISO-8601) | | |
 | time_cycle | TEXT | A recurring time interval (ISO-8601) | | |
 
-**Example Data**:
-```
-timer_event_definition_id | event_id | time_date | time_duration | time_cycle
----------------------------------------------------------
-0001 | 0003 | null | PT1H | null
-0002 | 0005 | 2025-06-01T09:00:00Z | null | null
-0003 | 0006 | null | null | R3/PT10H
-```
-
 ### Table: error_event_definition
 
 **Description**: Defines an error-based event.
@@ -394,13 +248,6 @@ timer_event_definition_id | event_id | time_date | time_duration | time_cycle
 | event_id | INTEGER | Reference to the event | FK, UNIQUE | event.event_id |
 | error_definition_id | INTEGER | Reference to an error definition | FK | error_definition.error_definition_id |
 
-**Example Data**:
-```
-error_event_definition_id | event_id | error_definition_id
--------------------------------------
-0001 | 0004 | 0001
-```
-
 ### Table: signal_event_definition
 
 **Description**: Defines a signal-based event.
@@ -410,13 +257,6 @@ error_event_definition_id | event_id | error_definition_id
 | signal_event_definition_id | INTEGER | Unique identifier | PK, AUTO_INCREMENT | |
 | event_id | INTEGER | Reference to the event | FK, UNIQUE | event.event_id |
 | signal_definition_id | INTEGER | Reference to a signal definition | FK | signal_definition.signal_definition_id |
-
-**Example Data**:
-```
-signal_event_definition_id | event_id | signal_definition_id
---------------------------------------
-0001 | 0007 | 0001
-```
 
 ### Table: sequence_flow
 
@@ -430,16 +270,6 @@ signal_event_definition_id | event_id | signal_definition_id
 | target_bpmn_element_id | INTEGER | Reference to the target element | FK, NOT NULL | bpmn_element.bpmn_element_id |
 | is_default | BOOLEAN | Indicates whether this is the default flow from a gateway | | |
 | condition_expression | TEXT | Condition expression for conditional flows | | |
-
-**Example Data**:
-```
-sequence_flow_id | bpmn_element_id | source_bpmn_element_id | target_bpmn_element_id | is_default | condition_expression
---------------------------------------------------------------------------------------------------
-0001 | 0009 | 0002 | 0001 | false | null
-0002 | 0010 | 0001 | 0003 | false | null
-0003 | 0011 | 0003 | 0012 | true | null
-0004 | 0012 | 0003 | 0013 | false | ${amount > 1000}
-```
 
 ### Table: gateway
 
@@ -456,14 +286,6 @@ sequence_flow_id | bpmn_element_id | source_bpmn_element_id | target_bpmn_elemen
 **Value Domain for gateway_type**: ["exclusive", "inclusive", "parallel", "event_based", "complex"]
 **Value Domain for gateway_direction**: ["converging", "diverging", "mixed"]
 
-**Example Data**:
-```
-gateway_id | bpmn_element_id | gateway_type | gateway_direction | sequence_flow_id
-------------------------------------------------------------------
-0001 | 0003 | exclusive | diverging | 0003
-0002 | 0008 | parallel | converging | null
-```
-
 ### Table: message_flow
 
 **Description**: Defines the message flow between pools or participants.
@@ -475,13 +297,6 @@ gateway_id | bpmn_element_id | gateway_type | gateway_direction | sequence_flow_
 | source_bpmn_element_id | INTEGER | Reference to the sending element | FK, NOT NULL | bpmn_element.bpmn_element_id |
 | target_bpmn_element_id | INTEGER | Reference to the receiving element | FK, NOT NULL | bpmn_element.bpmn_element_id |
 | message_definition_id | INTEGER | Reference to a message definition | FK | message_definition.message_definition_id |
-
-**Example Data**:
-```
-message_flow_id | bpmn_element_id | source_bpmn_element_id | target_bpmn_element_id | message_definition_id
-----------------------------------------------------------------------------------------
-0001 | 0014 | 0015 | 0016 | 0002
-```
 
 ### Table: association
 
@@ -497,13 +312,6 @@ message_flow_id | bpmn_element_id | source_bpmn_element_id | target_bpmn_element
 
 **Value Domain for association_direction**: ["none", "one", "both"]
 
-**Example Data**:
-```
-association_id | bpmn_element_id | source_bpmn_element_id | target_bpmn_element_id | association_direction
-----------------------------------------------------------------------------------------
-0001 | 0017 | 0001 | 0018 | none
-```
-
 ### Table: pool
 
 **Description**: Represents a participant in the BPMN process.
@@ -515,14 +323,6 @@ association_id | bpmn_element_id | source_bpmn_element_id | target_bpmn_element_
 | bpmn_process_id | INTEGER | Reference to the contained process | FK | bpmn_process.bpmn_process_id |
 | is_closed | BOOLEAN | Indicates whether the pool is closed | | |
 
-**Example Data**:
-```
-pool_id | bpmn_element_id | bpmn_process_id | is_closed
---------------------------------------------
-0001 | 0019 | 0001 | false
-0002 | 0020 | 0003 | true
-```
-
 ### Table: lane
 
 **Description**: Represents a subdivision within a pool, often for roles or organizational units.
@@ -533,14 +333,6 @@ pool_id | bpmn_element_id | bpmn_process_id | is_closed
 | bpmn_element_id | INTEGER | Reference to the base element | FK, UNIQUE | bpmn_element.bpmn_element_id |
 | pool_id | INTEGER | Reference to the parent pool | FK, NOT NULL | pool.bpmn_element_id |
 
-**Example Data**:
-```
-lane_id | bpmn_element_id | pool_id
-------------------------------------
-0001 | 0021 | 0019
-0002 | 0022 | 0019
-```
-
 ### Table: lane_element
 
 **Description**: Junction table defining the membership of elements to lanes.
@@ -550,15 +342,6 @@ lane_id | bpmn_element_id | pool_id
 | lane_element_id | INTEGER | Unique identifier | PK, AUTO_INCREMENT | |
 | lane_bpmn_element_id | INTEGER | Reference to the lane | FK | lane.bpmn_element_id |
 | bpmn_element_id | INTEGER | Reference to the contained element | FK | bpmn_element.bpmn_element_id |
-
-**Example Data**:
-```
-lane_element_id | lane_bpmn_element_id | bpmn_element_id
-----------------------------
-0001 | 0021 | 0001
-0002 | 0021 | 0002
-0003 | 0022 | 0024
-```
 
 ### Table: data_object
 
@@ -571,14 +354,6 @@ lane_element_id | lane_bpmn_element_id | bpmn_element_id
 | is_collection | BOOLEAN | Indicates whether this is a collection of data objects | | |
 | state | VARCHAR(100) | State of the data object | | |
 
-**Example Data**:
-```
-data_object_id | bpmn_element_id | is_collection | state
-------------------------------------------
-0001 | 0026 | false | draft
-0002 | 0027 | true | approved
-```
-
 ### Table: data_store
 
 **Description**: Represents a persistent data storage.
@@ -590,14 +365,6 @@ data_object_id | bpmn_element_id | is_collection | state
 | capacity | INTEGER | Capacity of the data store | | |
 | is_unlimited | BOOLEAN | Indicates whether the data store has unlimited capacity | | |
 
-**Example Data**:
-```
-data_store_id | bpmn_element_id | capacity | is_unlimited
--------------------------------------------
-0001 | 0028 | 1000 | false
-0002 | 0029 | null | true
-```
-
 ### Table: text_annotation
 
 **Description**: Allows adding text comments to the diagram.
@@ -607,13 +374,6 @@ data_store_id | bpmn_element_id | capacity | is_unlimited
 | text_annotation_id | INTEGER | Unique identifier | PK, AUTO_INCREMENT | |
 | bpmn_element_id | INTEGER | Reference to the base element | FK, UNIQUE | bpmn_element.bpmn_element_id |
 | text | TEXT | The content of the text annotation | | |
-
-**Example Data**:
-```
-text_annotation_id | bpmn_element_id | text
-----------------------------------------------
-0001 | 0030 | Critical step - requires manager approval
-```
 
 ### Table: data_input
 
@@ -626,14 +386,6 @@ text_annotation_id | bpmn_element_id | text
 | name | VARCHAR(255) | Name of the input element | | |
 | is_collection | BOOLEAN | Indicates whether this is a collection of data | | |
 
-**Example Data**:
-```
-data_input_id | bpmn_element_id | name | is_collection
----------------------------------------
-0001 | 0031 | Invoice Document | false
-0002 | 0032 | Supporting Documents | true
-```
-
 ### Table: data_output
 
 **Description**: Represents output data from an activity or process.
@@ -644,14 +396,6 @@ data_input_id | bpmn_element_id | name | is_collection
 | bpmn_element_id | INTEGER | Reference to the base element | FK, UNIQUE | bpmn_element.bpmn_element_id |
 | name | VARCHAR(255) | Name of the output element | | |
 | is_collection | BOOLEAN | Indicates whether this is a collection of data | | |
-
-**Example Data**:
-```
-data_output_id | bpmn_element_id | name | is_collection
----------------------------------------
-0001 | 0033 | Approved Invoice | false
-0002 | 0034 | Payment Records | true
-```
 
 ### Table: data_association
 
@@ -665,14 +409,6 @@ data_output_id | bpmn_element_id | name | is_collection
 | target_bpmn_element_id | INTEGER | Reference to the target data element | FK, NOT NULL | bpmn_element.bpmn_element_id |
 | transformation_expression | TEXT | Expression for data transformation | | |
 | assignment_expression | TEXT | Expression for data assignment | | |
-
-**Example Data**:
-```
-data_association_id | bpmn_element_id | source_bpmn_element_id | target_bpmn_element_id | transformation_expression | assignment_expression
-------------------------------------------------------------------------------------------------------------------------
-0001 | 0035 | 0031 | 0001 | null | ${invoice = input}
-0002 | 0036 | 0024 | 0033 | ${output = transform(result)} | null
-```
 
 ## Key Relationships
 
