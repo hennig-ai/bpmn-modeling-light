@@ -3,7 +3,7 @@
 ## Schema Overview
 
 **Name**: BPMN Process Model Database Schema  
-**Version**: 3.0  
+**Version**: 4.0  
 **Purpose**: Store and manage Business Process Model and Notation (BPMN) process definitions, including flow objects, connecting objects, swimlanes, and artifacts.
 
 ## Domain Model Semantics
@@ -57,7 +57,7 @@
 
 **Value Domain for element_type**: ["service_task", "user_task", "script_task", "business_rule_task", "subprocess", "call_activity", "event", "gateway", "sequence_flow", "message_flow", "association", "pool", "lane", "data_object", "data_store", "text_annotation", "data_input", "data_output", "data_association"]
 
-**HINWEIS**: Die Werte "activity" und "task" sind KEINE gültigen element_type Werte. Verwende immer den spezifischsten Subtyp (z.B. "user_task" statt "task", "subprocess" statt "activity").
+**NOTE**: The values "activity" and "task" are NOT valid element_type values. Always use the most specific subtype (e.g. "user_task" instead of "task", "subprocess" instead of "activity").
 
 ### Table: message_definition
 

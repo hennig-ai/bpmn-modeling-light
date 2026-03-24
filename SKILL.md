@@ -1,96 +1,96 @@
 ---
 name: bpmn-modeling-light
 description: >
-  Dieser Skill erzeugt und modifiziert BPMN-Prozessmodelle im Markdown-Tabellenformat
-  gemäß dem BPMN Database Schema v3.0. Er wird ausschließlich verwendet wenn der Nutzer
-  explizit ein BPMN-Modell erstellen, erweitern oder modifizieren möchte. Trigger-Begriffe
-  sind BPMN, Start Event, Sequence Flow, Gateway, User Task und andere BPMN-Fachbegriffe.
-  Nicht triggern bei allgemeinen Prozessbeschreibungen ohne BPMN-Bezug, bei anderen
-  Modelltypen (z.B. Datenmodell) oder bei allgemeinen BPMN-Fragen ohne Modellierungsauftrag.
+  This skill generates and modifies BPMN process models in Markdown table format
+  according to `references/bpmn-schema.md`. It is used exclusively when the user
+  explicitly wants to create, extend, or modify a BPMN model. Trigger terms include
+  BPMN, Start Event, Sequence Flow, Gateway, User Task, and other BPMN-specific terms.
+  Do not trigger for general process descriptions without BPMN context, for other
+  model types (e.g. data model), or for general BPMN questions without a modeling request.
 metadata:
   version: "2.0"
 ---
 
 # BPMN Modeling Light — Skill
 
-## Trigger-Beispiele
+## Trigger Examples
 
-Beispiele die triggern:
-- "Erstelle ein BPMN-Modell für einen Bestellprozess"
-- "Modelliere das als BPMN"
-- "Füge ein Exclusive Gateway hinzu" (im Kontext eines bestehenden BPMN-Modells)
-- "Lass uns das BPMN-Modell bestellprozess.md anpassen" (Modifikation einer bestehenden BPMN-Datei)
+Examples that trigger:
+- "Create a BPMN model for an order process"
+- "Model this as BPMN"
+- "Add an Exclusive Gateway" (in the context of an existing BPMN model)
+- "Let's modify the BPMN model order-process.md" (modification of an existing BPMN file)
 
-**NICHT triggern bei:**
-- "Lass uns einen Prozess beschreiben" (kein BPMN-Bezug)
-- "Modelliere einen Bestellprozess" (kein expliziter BPMN-Bezug)
-- "Erstelle ein Datenmodell" (anderer Modelltyp)
-- Allgemeine Prozessbeschreibungen ohne BPMN-Kontext
-- Allgemeine BPMN-Fragen ohne Modellierungsauftrag
-
----
-
-## Referenz-Dateien
-
-Dieser Skill arbeitet mit folgenden Referenzdokumenten im selben Repository:
-
-| Datei | Zweck |
-|-------|-------|
-| `references/bpmn-instance-example.md` | Referenz-Instanz: verbindliches Tabellenformat und Beispieldaten |
-| `references/bpmn-hierarchy.md` | Vererbungshierarchie der BPMN-Elemente, `element_type`-Übersicht |
-| `references/event-detail-tables.md` | Event-Definition-Tabellen und deren Verhältnis zu `element_type` |
-| `references/bpmn-schema.md` | Vollständige Schema-Dokumentation aller Tabellen, Spalten, Constraints, Value Domains |
-
-### Lade-Strategie
-
-**Vor jeder Modellierung PFLICHT laden:**
-- `references/bpmn-instance-example.md` — verbindliches Tabellenformat und FK-Beziehungsmuster
-- `references/bpmn-hierarchy.md` — `element_type`-Zuordnung
-- `references/event-detail-tables.md` — Event-Definition-Abgrenzung
-
-**Bei Bedarf nachschlagen:**
-- `references/bpmn-schema.md` — nur wenn eine spezifische Tabellen-Definition unklar ist (z.B. Spalten, Constraints, Value Domains einer bestimmten Tabelle)
+**Do NOT trigger for:**
+- "Let's describe a process" (no BPMN context)
+- "Model an order process" (no explicit BPMN context)
+- "Create a data model" (different model type)
+- General process descriptions without BPMN context
+- General BPMN questions without a modeling request
 
 ---
 
-## Modus-Erkennung
+## Reference Files
 
-Zu Beginn jeder Interaktion den Modus bestimmen:
+This skill works with the following reference documents in the same repository:
 
-### Modus A: Neumodellierung
-- Nutzer beschreibt einen Prozess ohne bestehendes Modell
-- Nutzer möchte "ein neues Modell erstellen"
-- → Vollständiges neues Modell von Grund auf erzeugen
+| File | Purpose |
+|------|---------|
+| `references/bpmn-instance-example.md` | Reference instance: authoritative table format and example data |
+| `references/bpmn-hierarchy.md` | Inheritance hierarchy of BPMN elements, `element_type` overview |
+| `references/event-detail-tables.md` | Event definition tables and their relationship to `element_type` |
+| `references/bpmn-schema.md` | Complete schema documentation of all tables, columns, constraints, value domains |
 
-### Modus B: Modifikation
-- Nutzer liefert ein bestehendes Modell (Markdown-Tabellen) und beschreibt Änderungen
-- Nutzer möchte Elemente hinzufügen, entfernen oder ändern
-- → Bestehendes Modell übernehmen, gezielt modifizieren, vollständiges Modell ausgeben
+### Loading Strategy
 
-**Bei Unklarheit**: Explizit fragen ob ein bestehendes Modell vorliegt.
+**MUST load before every modeling task:**
+- `references/bpmn-instance-example.md` — authoritative table format and FK relationship patterns
+- `references/bpmn-hierarchy.md` — `element_type` mapping
+- `references/event-detail-tables.md` — event definition delineation
 
----
-
-## Ausgabe-Format
-
-- **Ausschließlich** das Markdown-Tabellenformat aus `references/bpmn-instance-example.md` verwenden
-- Alle Tabellen mit `## Tabellenname` als Überschrift
-- Vollständiges Modell ausgeben (nicht nur geänderte Tabellen)
-- Keine zusätzlichen Erläuterungen zwischen den Tabellen
-- Erläuterungen zu Designentscheidungen **vor** oder **nach** dem Modell, nicht darin
+**Consult as needed:**
+- `references/bpmn-schema.md` — only when a specific table definition is unclear (e.g. columns, constraints, value domains of a particular table)
 
 ---
 
-## Regeln
+## Mode Detection
 
-### 1. Format-Konformität
-- **EXAKT** das Markdown-Tabellenformat aus `references/bpmn-instance-example.md` verwenden
-- Keine Abweichungen in Formatierung, Spaltenreihenfolge oder Struktur
-- Spaltennamen exakt wie im Schema definiert
-- Leere/nicht befüllte optionale Felder: `##!empty!##` als Platzhalterwert
+Determine the mode at the start of each interaction:
 
-### 2. Tabellenreihenfolge
-Die Tabellen müssen in der folgenden kanonischen Reihenfolge ausgegeben werden. Tabellen ohne Datenzeilen werden weggelassen (siehe Regel 3).
+### Mode A: New Model
+- User describes a process without an existing model
+- User wants to "create a new model"
+- → Generate a complete new model from scratch
+
+### Mode B: Modification
+- User provides an existing model (Markdown tables) and describes changes
+- User wants to add, remove, or modify elements
+- → Adopt the existing model, apply targeted modifications, output the complete model
+
+**When unclear**: Explicitly ask whether an existing model is present.
+
+---
+
+## Output Format
+
+- Use **exclusively** the Markdown table format from `references/bpmn-instance-example.md`
+- All tables with `## TableName` as heading
+- Output the complete model (not just modified tables)
+- No additional explanations between tables
+- Explanations of design decisions **before** or **after** the model, not within it
+
+---
+
+## Rules
+
+### 1. Format Conformity
+- Use **EXACTLY** the Markdown table format from `references/bpmn-instance-example.md`
+- No deviations in formatting, column order, or structure
+- Column names exactly as defined in the schema
+- Empty/unfilled optional fields: `##!empty!##` as placeholder value
+
+### 2. Table Order
+Tables must be output in the following canonical order. Tables without data rows are omitted (see Rule 3).
 
 1. `bpmn_model`
 2. `bpmn_process`
@@ -126,146 +126,146 @@ Die Tabellen müssen in der folgenden kanonischen Reihenfolge ausgegeben werden.
 32. `data_output`
 33. `data_association`
 
-### 3. Tabellengenerierung — KRITISCH
-- **NIEMALS leere Tabellen ausgeben**
-- Eine Tabelle wird NUR dann in die Ausgabe aufgenommen, wenn sie mindestens eine Datenzeile (nicht nur Header) enthält
-- **VERBOTEN**: Tabellen mit nur Header-Zeile ohne Datenzeilen
-- **ERLAUBT**: Nur Tabellen mit Header + mindestens einer Datenzeile
-- Die Reihenfolge der tatsächlich generierten Tabellen muss der obigen Liste (Regel 2) entsprechen
+### 3. Table Generation — CRITICAL
+- **NEVER output empty tables**
+- A table is ONLY included in the output if it contains at least one data row (not just the header)
+- **FORBIDDEN**: Tables with only a header row and no data rows
+- **ALLOWED**: Only tables with header + at least one data row
+- The order of actually generated tables must follow the list above (Rule 2)
 
 ### 4. Primary Keys (PK)
-- Format: dreistellige Integer mit führenden Nullen (z.B. `001`, `002`)
-- Ausnahme: `bpmn_model_id` — Format `YYYYMMDD_HHMM_SS_NNN` (z.B. `20251026_1730_56_001`)
-- Eindeutig innerhalb jeder Tabelle
-- Bei neuen Einträgen: Höchste vorhandene PK + 1
-- Bestehende PKs werden NIE geändert
+- Format: three-digit integers with leading zeros (e.g. `001`, `002`)
+- Exception: `bpmn_model_id` — format `YYYYMMDD_HHMM_SS_NNN` (e.g. `20251026_1730_56_001`)
+- Unique within each table
+- For new entries: highest existing PK + 1
+- Existing PKs are NEVER changed
 
-### 5. Foreign Keys (FK) — Referenzielle Integrität
-- FK-Werte MÜSSEN in der referenzierten Tabelle existieren
-- Schema-Notation: `<tabelle>.<spalte>` zeigt Ziel der Referenz
-- FK-Werte müssen fachlich sinnvoll sein (nicht willkürlich)
-- Bei Modifikationen: Prüfe alle bestehenden FKs auf Konsistenz nach der Änderung
+### 5. Foreign Keys (FK) — Referential Integrity
+- FK values MUST exist in the referenced table
+- Schema notation: `<table>.<column>` indicates the reference target
+- FK values must be semantically meaningful (not arbitrary)
+- During modifications: verify all existing FKs for consistency after the change
 
-### 6. KRITISCH: element_type Befüllung
+### 6. CRITICAL: element_type Population
 
-#### Grundregel
-`element_type` enthält den SPEZIFISCHSTEN Typ der Vererbungshierarchie, **der eine eigene `bpmn_element_id` besitzt**.
+#### Base Rule
+`element_type` contains the MOST SPECIFIC type in the inheritance hierarchy **that has its own `bpmn_element_id`**.
 
-#### Bestimmungs-Algorithmus
-1. Identifiziere alle Tabellen, in denen das Element Einträge hat
-2. Finde die TIEFSTE Tabelle, die `bpmn_element_id` als FK referenziert
-3. Der Tabellenname (ohne Prä-/Suffix) = element_type
+#### Determination Algorithm
+1. Identify all tables in which the element has entries
+2. Find the DEEPEST table that references `bpmn_element_id` as FK
+3. The table name (without prefix/suffix) = element_type
 
-#### Spezialisierung über Subtyp-Tabellen vs. Typ-Spalten
+#### Specialization via Subtype Tables vs. Type Columns
 
-Das Schema verwendet zwei Mechanismen zur Spezialisierung:
+The schema uses two mechanisms for specialization:
 
-| Mechanismus | element_type | Spezialisierung über |
-|-------------|--------------|---------------------|
-| **Subtyp-Tabelle** | Tabellenname | Separate Tabelle mit eigener PK |
-| **Typ-Spalte** | Eltern-Tabellenname | Spalte in der Eltern-Tabelle |
+| Mechanism | element_type | Specialization via |
+|-----------|--------------|-------------------|
+| **Subtype table** | Table name | Separate table with its own PK |
+| **Type column** | Parent table name | Column in the parent table |
 
-#### Übersicht aller Element-Typen und ihrer Spezialisierung
+#### Overview of All Element Types and Their Specialization
 
-| element_type | Weitere Spezialisierung | Spalte/Tabelle |
-|--------------|------------------------|----------------|
+| element_type | Further specialization | Column/Table |
+|--------------|----------------------|--------------|
 | `event` | event_type (start, end, intermediate_catch, intermediate_throw, boundary) | `event.event_type` |
 | `event` | event_definition_type (message, timer, error, signal, none, ...) | `event.event_definition_type` |
 | `gateway` | gateway_type (exclusive, inclusive, parallel, event_based, complex) | `gateway.gateway_type` |
 | `gateway` | gateway_direction (converging, diverging, mixed) | `gateway.gateway_direction` |
 | `subprocess` | is_transaction, triggered_by_event | `subprocess.*` |
-| `service_task` | - | Subtyp-Tabelle von `task` |
-| `user_task` | - | Subtyp-Tabelle von `task` |
-| `script_task` | - | Subtyp-Tabelle von `task` |
-| `business_rule_task` | - | Subtyp-Tabelle von `task` |
-| `call_activity` | - | Subtyp-Tabelle von `activity` |
+| `service_task` | - | Subtype table of `task` |
+| `user_task` | - | Subtype table of `task` |
+| `script_task` | - | Subtype table of `task` |
+| `business_rule_task` | - | Subtype table of `task` |
+| `call_activity` | - | Subtype table of `activity` |
 | `sequence_flow` | is_default, condition_expression | `sequence_flow.*` |
 | `data_object` | is_collection, state | `data_object.*` |
 
-#### WICHTIG: Event Definitions sind KEINE bpmn_elements
-Die Tabellen `message_event_definition`, `timer_event_definition`, `error_event_definition`, `signal_event_definition` haben KEINE `bpmn_element_id` — sie referenzieren `event_id`. Daher ist für Events mit Definition der `element_type` immer `event`, die Spezialisierung erfolgt über `event.event_definition_type`.
+#### IMPORTANT: Event Definitions are NOT bpmn_elements
+The tables `message_event_definition`, `timer_event_definition`, `error_event_definition`, `signal_event_definition` have NO `bpmn_element_id` — they reference `event_id`. Therefore, for events with a definition, the `element_type` is always `event`; specialization is done via `event.event_definition_type`.
 
-#### WICHTIG: Gateways haben KEINE Subtyp-Tabellen
-Es gibt keine separaten Tabellen für `exclusive_gateway`, `parallel_gateway` etc. Der `element_type` ist immer `gateway`, die Spezialisierung erfolgt über `gateway.gateway_type`.
+#### IMPORTANT: Gateways Have NO Subtype Tables
+There are no separate tables for `exclusive_gateway`, `parallel_gateway`, etc. The `element_type` is always `gateway`; specialization is done via `gateway.gateway_type`.
 
-#### Häufige Fehler vermeiden
+#### Common Mistakes to Avoid
 
 **Tasks:**
-❌ FALSCH: element_type='task' für einen User Task
-✅ RICHTIG: element_type='user_task'
+❌ WRONG: element_type='task' for a User Task
+✅ CORRECT: element_type='user_task'
 
-❌ FALSCH: element_type='activity' für einen Service Task
-✅ RICHTIG: element_type='service_task'
+❌ WRONG: element_type='activity' for a Service Task
+✅ CORRECT: element_type='service_task'
 
 **Events:**
-❌ FALSCH: element_type='message_event_definition' für ein Message Event
-✅ RICHTIG: element_type='event' (Spezialisierung über event.event_definition_type='message')
+❌ WRONG: element_type='message_event_definition' for a Message Event
+✅ CORRECT: element_type='event' (specialization via event.event_definition_type='message')
 
 **Gateways:**
-❌ FALSCH: element_type='exclusive_gateway' für ein XOR-Gateway
-✅ RICHTIG: element_type='gateway' (Spezialisierung über gateway.gateway_type='exclusive')
+❌ WRONG: element_type='exclusive_gateway' for an XOR Gateway
+✅ CORRECT: element_type='gateway' (specialization via gateway.gateway_type='exclusive')
 
-❌ FALSCH: element_type='parallel_gateway' für ein AND-Gateway
-✅ RICHTIG: element_type='gateway' (Spezialisierung über gateway.gateway_type='parallel')
+❌ WRONG: element_type='parallel_gateway' for an AND Gateway
+✅ CORRECT: element_type='gateway' (specialization via gateway.gateway_type='parallel')
 
-### 7. Datenintegrität
-- Beachte alle im Schema definierten Constraints
-- Verwende nur Werte aus definierten Value Domains (siehe `references/bpmn-schema.md`)
-- Stelle sicher, dass Vererbungsbeziehungen konsistent sind
-- Jeder ausführbare Prozess (`is_executable=true`) muss mindestens ein Start- und ein End-Event haben
-
----
-
-## Arbeitsweise
-
-### Modus A: Neumodellierung
-
-1. Fachliche Anforderungen vollständig verstehen — bei Unklarheiten nachfragen
-2. BPMN-Konzepte auf Datenbankstrukturen mappen (Referenz: `references/bpmn-hierarchy.md`)
-3. `bpmn_model_id` nach dem Format `YYYYMMDD_HHMM_SS_001` generieren (aktuelles Datum)
-4. Alle Tabellen von oben nach unten befüllen (kanonische Reihenfolge, Regel 2)
-5. Vollständiges Modell ausgeben
-
-### Modus B: Modifikation
-
-1. Bestehendes Modell analysieren — alle PKs, FKs und Beziehungen erfassen
-2. Gewünschte Änderungen mit dem Nutzer klären falls nötig
-3. Nur die betroffenen Tabellen modifizieren
-4. Neue Einträge: PK = bisheriges Maximum + 1
-5. Gelöschte Elemente: alle abhängigen FK-Referenzen prüfen und bereinigen
-6. **Vollständiges** Modell ausgeben (nicht nur geänderte Tabellen)
-
-### Bei Unklarheiten
-- Frage spezifisch nach fehlenden Details
-- Kläre Mehrdeutigkeiten vor der Ausgabe
-- Bestätige kritische Designentscheidungen (z.B. Transaktions-Subprocess, Event-Based Gateway)
-- Weise auf potenzielle BPMN-Konformitätsprobleme hin
+### 7. Data Integrity
+- Observe all constraints defined in the schema
+- Use only values from defined value domains (see `references/bpmn-schema.md`)
+- Ensure inheritance relationships are consistent
+- Every executable process (`is_executable=true`) must have at least one start event and one end event
 
 ---
 
-## Qualitätssicherung
+## Workflow
 
-Vor jeder Ausgabe MÜSSEN folgende Prüfungen durchgeführt werden:
+### Mode A: New Model
 
-1. **Element-Type Korrektheit**: Prüfe `element_type` für JEDEN Eintrag in `bpmn_element`
-2. **FK-Validierung**: Validiere alle Foreign Key Beziehungen tabellenübergreifend
-3. **BPMN-Konformität**: Prüfe alle Validierungsregeln aus `references/bpmn-schema.md`
-4. **Prozess-Vollständigkeit**: Bei `is_executable=true` — mindestens ein Start- und ein End-Event vorhanden?
-5. **Konnektivität**: Sind alle Flow Objects über Sequence Flows erreichbar?
-6. **Keine leeren Tabellen**: Entferne alle Tabellen ohne Datenzeilen aus der Ausgabe
-7. **Tabellenreihenfolge**: Entspricht die Reihenfolge der kanonischen Ordnung (Regel 2)?
-8. **PK-Eindeutigkeit**: Sind alle PKs innerhalb ihrer Tabelle eindeutig?
+1. Fully understand the business requirements — ask for clarification if anything is unclear
+2. Map BPMN concepts to database structures (reference: `references/bpmn-hierarchy.md`)
+3. Generate `bpmn_model_id` using the format `YYYYMMDD_HHMM_SS_001` (current date)
+4. Populate all tables top to bottom (canonical order, Rule 2)
+5. Output the complete model
+
+### Mode B: Modification
+
+1. Analyze the existing model — capture all PKs, FKs, and relationships
+2. Clarify desired changes with the user if needed
+3. Modify only the affected tables
+4. New entries: PK = current maximum + 1
+5. Deleted elements: verify and clean up all dependent FK references
+6. Output the **complete** model (not just modified tables)
+
+### When Unclear
+- Ask specifically about missing details
+- Resolve ambiguities before output
+- Confirm critical design decisions (e.g. transaction subprocess, event-based gateway)
+- Point out potential BPMN conformity issues
 
 ---
 
-## Fehlerbehandlung
+## Quality Assurance
 
-Bei Verletzung von BPMN-Regeln:
-- Informiere den Nutzer über die spezifische Regelverletzung
-- Schlage eine konforme Alternative vor
-- Erstelle KEINE nicht-konformen Modelle
+The following checks MUST be performed before every output:
 
-Bei widersprüchlichen Anforderungen:
-- Benenne den Widerspruch explizit
-- Frage welche Anforderung Vorrang hat
-- Modelliere erst nach Klärung
+1. **Element type correctness**: Verify `element_type` for EVERY entry in `bpmn_element`
+2. **FK validation**: Validate all foreign key relationships across tables
+3. **BPMN conformity**: Verify all validation rules from `references/bpmn-schema.md`
+4. **Process completeness**: For `is_executable=true` — at least one start event and one end event present?
+5. **Connectivity**: Are all flow objects reachable via sequence flows?
+6. **No empty tables**: Remove all tables without data rows from the output
+7. **Table order**: Does the order match the canonical order (Rule 2)?
+8. **PK uniqueness**: Are all PKs unique within their table?
+
+---
+
+## Error Handling
+
+When BPMN rules are violated:
+- Inform the user about the specific rule violation
+- Suggest a conforming alternative
+- Do NOT create non-conforming models
+
+When requirements are contradictory:
+- Explicitly name the contradiction
+- Ask which requirement takes priority
+- Only model after clarification
