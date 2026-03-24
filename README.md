@@ -46,6 +46,16 @@ git clone https://github.com/hennig-ai/bpmn-modeling-light.git .agents/skills/bp
 git clone https://github.com/hennig-ai/bpmn-modeling-light.git .github/skills/bpmn-modeling-light
 ```
 
+### Claude.ai Projects (alternative)
+
+You can also use this skill manually via Claude.ai Projects. However, this requires adjustments:
+
+1. Paste the content of `SKILL.md` into the **Project Prompt** (system instructions)
+2. Upload the four files from `references/` as **Project Knowledge**
+3. **Remove or adapt the "Lade-Strategie" section** from the prompt — it references file paths that don't apply in a Projects context, since all knowledge files are already loaded into the conversation
+
+Note that in Projects, all reference files are always in context (no lazy loading), which uses more of the context window.
+
 ### Other platforms
 
 Any AI agent that supports the [Agent Skills standard](https://agentskills.io) can use this skill. Clone the repository into the platform's skills directory.
