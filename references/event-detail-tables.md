@@ -1,10 +1,10 @@
-# Event Detail-Tabellen (KEINE bpmn_elements!)
+# Event Detail Tables (NOT bpmn_elements!)
 
-Diese Tabellen erweitern `event` über `event_id`, haben aber **KEINE eigene `bpmn_element_id`**.
-Sie sind daher **KEINE gültigen `element_type` Werte**.
+These tables extend `event` via `event_id`, but have **NO own `bpmn_element_id`**.
+Therefore they are **NOT valid `element_type` values**.
 
-| parent | child | Spezialisierung über |
-|--------|-------|---------------------|
+| parent | child | specialization via |
+|--------|-------|-------------------|
 | event | message_event_definition | event.event_definition_type='message' |
 | event | timer_event_definition | event.event_definition_type='timer' |
 | event | error_event_definition | event.event_definition_type='error' |
