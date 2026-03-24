@@ -18,9 +18,11 @@ BPMN models as structured Markdown tables. It supports:
 
 ## Installation
 
+Skills are installed by cloning the repository into the directory where your AI agent looks for skills. There is no separate install command — placing the files in the right location is all it takes. The agent automatically discovers any `SKILL.md` file in its skills directory.
+
 ### Claude Code
 
-Add the skill to your project or personal skills directory:
+From your project root, clone the skill into the skills directory:
 
 ```bash
 # Project-level (shared via git)
@@ -52,7 +54,7 @@ You can also use this skill manually via Claude.ai Projects. However, this requi
 
 1. Paste the content of `SKILL.md` into the **Project Prompt** (system instructions)
 2. Upload the four files from `references/` as **Project Knowledge**
-3. **Remove or adapt the "Lade-Strategie" section** from the prompt — it references file paths that don't apply in a Projects context, since all knowledge files are already loaded into the conversation
+3. **Remove or adapt the "Loading Strategy" section** from the prompt — it references file paths that don't apply in a Projects context, since all knowledge files are already loaded into the conversation
 
 Note that in Projects, all reference files are always in context (no lazy loading), which uses more of the context window.
 
