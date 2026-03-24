@@ -62,7 +62,7 @@ Note that in Projects, all reference files are always in context (no lazy loadin
 
 Any AI agent that supports the [Agent Skills standard](https://agentskills.io) can use this skill. Clone the repository into the platform's skills directory.
 
-> **Note:** This skill has only been tested on Claude Code and Claude.ai. It should work on any platform that supports the Agent Skills standard, but is not guaranteed.
+> **Note:** This skill has only been tested on Claude Code and Claude.ai (Cowork). It should work on any platform that supports the Agent Skills standard, but is not guaranteed.
 
 ## Usage
 
