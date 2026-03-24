@@ -8,7 +8,7 @@ description: >
   Do not trigger for general process descriptions without BPMN context, for other
   model types (e.g. data model), or for general BPMN questions without a modeling request.
 metadata:
-  version: "4.0"
+  version: "1.0"
 ---
 
 # BPMN Modeling Light — Skill
